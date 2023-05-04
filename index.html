@@ -1,11 +1,536 @@
+<!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="wide=device-width, initial-scale=1.0">
-        <title>Document</title>
-    </head>
-    <body>
-        <h1>Audio Convolution</h1>
-        <p>The quick brown fox jumped over the lazy dog</p>
-    </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, shrink-to-fit=no">
+  <link href="assets/images/favicon.png" rel="icon" />
+  <title>Audio Convolution</title>
+  <meta name="description" content="MUS 15 Project 1">
+  <meta name="author" content="Enzo De Oliveira">
+
+  <!-- Stylesheet
+============================== -->
+  <!-- Bootstrap -->
+  <link rel="stylesheet" type="text/css" href="assets/vendor/bootstrap/css/bootstrap.min.css" />
+  <!-- Font Awesome Icon -->
+  <link rel="stylesheet" type="text/css" href="assets/vendor/font-awesome/css/all.min.css" />
+  <!-- Magnific Popup -->
+  <link rel="stylesheet" type="text/css" href="assets/vendor/magnific-popup/magnific-popup.min.css" />
+  <!-- Highlight Syntax -->
+  <link rel="stylesheet" type="text/css" href="assets/vendor/highlight.js/styles/github.css" />
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" type="text/css" href="assets/css/stylesheet.css" />
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body data-spy="scroll" data-target=".idocs-navigation" data-offset="125">
+
+  <!-- Preloader -->
+  <div class="preloader">
+    <div class="lds-ellipsis">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </div>
+  <!-- Preloader End -->
+
+  <!-- Document Wrapper   
+=============================== -->
+  <div id="main-wrapper">
+
+    <!-- Header
+  ============================ -->
+    <header id="header" class="sticky-top">
+      <!-- Navbar -->
+      <nav class="primary-menu navbar navbar-expand-lg navbar-dropdown-dark">
+        <div class="container-fluid">
+          <!-- Sidebar Toggler -->
+          <button id="sidebarCollapse" class="navbar-toggler d-block d-md-none" type="button"><span></span><span
+              class="w-75"></span><span class="w-50"></span></button>
+
+          <!-- Navbar Toggler -->
+          <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse"
+            data-target="#header-nav"><span></span><span></span><span></span></button>
+
+          <div id="header-nav" class="collapse navbar-collapse justify-content-left">
+            <ul class="navbar-nav">
+              <li><a target="_blank" href="index.html">Audio Convolution</a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <!-- Navbar End -->
+    </header>
+    <!-- Header End -->
+
+    <!-- Content
+  ============================ -->
+    <div id="content" role="main">
+
+      <!-- Sidebar Navigation
+	============================ -->
+      <div class="idocs-navigation bg-dark docs-navigation-dark">
+        <ul class="nav flex-column ">
+          <li class="nav-item"><a class="nav-link" href="#conv_overview">Overview</a></li>
+          <li class="nav-item"><a class="nav-link" href="#conv_program">Program Explanation</a></li>
+          <li class="nav-item"><a class="nav-link" href="#conv_explanation">Signal Processing</a></li>
+          <li class="nav-item"><a class="nav-link" href="#conv_samples">Samples</a></li>
+          <li class="nav-item"><a class="nav-link" href="#conv_sources">Sources</a></li>
+        </ul>
+      </div>
+
+      <!-- Docs Content
+	============================ -->
+      <div class="idocs-content">
+        <div class="container">
+
+          <!-- Title Section
+		============================ -->
+          <section id="idocs_start">
+            <h1>MUS 15 Project 1 Site</h1>
+            <hr>
+            <div class="row">
+              <div class="col-sm-6 col-lg-4">
+                <ul class="list-unstyled">
+                  <li><strong>Version:</strong> 1.0</li>
+                  <li><strong>Author:</strong> <a href="https://github.com/edeolive" target="_blank">Enzo De
+                      Oliveira</a>
+                  </li>
+                </ul>
+              </div>
+              <div class="col-sm-6 col-lg-4">
+                <ul class="list-unstyled">
+                  <li><strong class="font-weight-700">Created:</strong> 2 May, 2023</li>
+                  <li><strong>Update:</strong> 2 May, 2023</li>
+                </ul>
+              </div>
+              <p><strong>Code:</strong> <a href="https://github.com/edeolive/audio_conv">audio_conv</a></p>
+            </div>
+          </section>
+
+          <hr class="divider">
+
+          <!-- Content
+		============================ -->
+          <section id="conv_overview">
+            <h2>Overview</h2>
+            <p>For project 1, I wrote a python program that implements audio convolution. In audio processing,
+              convolution is a way of combining two audio sources so that frequencies that are common between
+              both sources will be larger, while frequencies not in common will be minimized. Audio
+              convolution is most commonly used to create high-quality reverb effects, often of real
+              locations. It can be used to approximate any effect that is linear time invariant (e.g.
+              time-based delay, equalizers).
+              <a href="https://moinsound.wordpress.com/2015/01/30/audio-engineering-myths-linearity/">(1)</a>
+
+              <p>The program depends on the following python libraries: numpy, tensorflow, wave, soundfile. Usage:
+                <br>
+                <code>python tensor_conv.py -a [path to audio file] -i [path to impulse file] -o [output path]</code>
+                <br>
+                e.g.
+                <br>
+                <code>python tensor_conv.py -a './assets/audio/dog bark dry.wav' -i ./assets/audio/slinky_ir.wav ./assets/audio/bark_slinky.py</code>
+                <br>
+                Inputs must be wav files and outputs are mono wav files.
+              </p>
+            </p>
+          </section>
+
+          <hr class="divider">
+
+          <section id="conv_program">
+            <h2>How the Program Works</h2>
+            <p>
+              The program generally runs as follows:
+              <ol>
+                <li>Extract audio data from WAV files</li>
+                <li>Pre-process data for convolution (floating point conversion, normalization, etc.)</li>
+                <li>Convolve signals: \(output = IFFT(FFT(A) \cdot FFT(B))\)</li>
+                <li>Normalize output data</li>
+                <li>Create WAV file holding output data</li>
+              </ol>
+            </p>
+          </section>
+
+          <hr class="divider">
+
+          <section id="conv_explanation">
+            <h2>Signal Processing</h2>
+            <p>
+              In signal processing, an impulse response is a function that describes the response of a system to a brief input signal <a href="https://en.wikipedia.org/wiki/Impulse_response#Acoustic_and_audio_applications">(2)</a>.
+              For audio processing, this is usually the response of a location, speaker, or microphone.
+              A convolutional function can be applied to an audio signal and an impulse response to apply the effects of the response's system to the audio, e.g. simulating the reverb of a room.
+              <br>
+              <br>
+              Convolution is a mathematical
+              operation of two functions that creats a third that describes how the shape of one function is modified by
+              the other. For the convolution of audio files, this operation would be mathematically defined using
+              discrete time samples:
+              \[ (f \ast g)[n] = \sum_{m=0}^M f[n - m] g[m] \]
+              where \(f\) and \(g\) are vector of frequency samples at discrete time intervals (in this case, the data
+              segment of WAV files), and \(M\) is the length of the impulse file's data.
+              <br>
+              So, our output would be computed:
+              \[output = \sum_{n=0}^N (f \ast g)[n] \]
+              In audio signal processing, discrete convolution is too slow to actually compute, since the number of
+              samples in an audio file is very large and this algorithm runs in quadratic time <a href="https://en.wikipedia.org/wiki/Convolution#Fast_convolution_algorithms">(3)</a>.
+              So, we use a <a href="https://en.wikipedia.org/wiki/Convolution#Fast_convolution_algorithms"> fast Fourier
+                transform algorithm (3)</a>
+              to quickly compute a circular convolution.
+              <br>
+              This looks like:
+              \[output = IFFT(FFT(f) \cdot FFT(g))\]
+              where "\(\cdot\)" is element-wise multiplication, \(FFT(x)\) is the fast Fourier transform of \(x\), and \(IFFT(x)\) is the inverse fast Fourier transform of \(x\).
+              This algorithm is much faster, taking log-linear time <a href="https://en.wikipedia.org/wiki/Convolution#Fast_convolution_algorithms">(3)</a>.
+              <br>
+              <br>
+            </p>
+          </section>
+
+          <hr class="divider">
+
+          <section id="conv_samples">
+            <h2>Samples</h2>
+            <p>
+              Here are some examples of different impulses applied by the program:
+            </p>
+            <h3>University of York Stairway</h3>
+            <p>Impulse:</p>
+            <audio controls>
+              <source src="./assets/audio/stairwell_ortf.wav" type="audio/wav">
+              Your browser does not support the audio element.
+            </audio>
+            <p>
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>Sample</th>
+                    <th>Output</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <div align="center" id="player">
+                      <p>Dry Dog bark</p>
+                      <audio controls>
+                        <source src="./assets/audio/dog bark dry.wav" type="audio/wav">
+                        Your browser does not support the audio element.
+                      </audio>
+                      </div>
+                    </td>
+                    <td>
+                      <div align="center" id="player">
+                        <p>Result</p>
+                        <audio controls>
+                          <source src="./assets/audio/bark_stairs.wav" type="audio/wav">
+                          Your browser does not support the audio element.
+                        </audio>
+                        </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div align="center" id="player">
+                      <p>Dry Guitar Signal 1</p>
+                      <audio controls>
+                        <source src="./assets/audio/guitar2.wav" type="audio/wav">
+                        Your browser does not support the audio element.
+                      </audio>
+                      </div>
+                    </td>
+                    <td>
+                      <div align="center" id="player">
+                        <p>Result</p>
+                        <audio controls>
+                          <source src="./assets/audio/guitar2_stairs.wav" type="audio/wav">
+                          Your browser does not support the audio element.
+                        </audio>
+                        </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div align="center" id="player">
+                      <p>Dry Guitar Signal 2</p>
+                      <audio controls>
+                        <source src="./assets/audio/guitar1.wav" type="audio/wav">
+                        Your browser does not support the audio element.
+                      </audio>
+                      </div>
+                    </td>
+                    <td>
+                      <div align="center" id="player">
+                        <p>Result</p>
+                        <audio controls>
+                          <source src="./assets/audio/guitar1_stairs.wav" type="audio/wav">
+                          Your browser does not support the audio element.
+                        </audio>
+                        </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </p>
+            <h3>Analog Delay</h3>
+            <p>Impulse:</p>
+            <audio controls>
+              <source src="./assets/audio/GT-8 Analog Delay L.wav" type="audio/wav">
+              Your browser does not support the audio element.
+            </audio>
+            <p>
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>Sample</th>
+                    <th>Output</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <div align="center" id="player">
+                      <p>Dry Dog bark</p>
+                      <audio controls>
+                        <source src="./assets/audio/dog bark dry.wav" type="audio/wav">
+                        Your browser does not support the audio element.
+                      </audio>
+                      </div>
+                    </td>
+                    <td>
+                      <div align="center" id="player">
+                        <p>Result</p>
+                        <audio controls>
+                          <source src="./assets/audio/bark_delay.wav" type="audio/wav">
+                          Your browser does not support the audio element.
+                        </audio>
+                        </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div align="center" id="player">
+                      <p>Dry Guitar Signal 1</p>
+                      <audio controls>
+                        <source src="./assets/audio/guitar2.wav" type="audio/wav">
+                        Your browser does not support the audio element.
+                      </audio>
+                      </div>
+                    </td>
+                    <td>
+                      <div align="center" id="player">
+                        <p>Result</p>
+                        <audio controls>
+                          <source src="./assets/audio/guitar2_delay.wav" type="audio/wav">
+                          Your browser does not support the audio element.
+                        </audio>
+                        </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div align="center" id="player">
+                      <p>Dry Guitar Signal 2</p>
+                      <audio controls>
+                        <source src="./assets/audio/guitar1.wav" type="audio/wav">
+                        Your browser does not support the audio element.
+                      </audio>
+                      </div>
+                    </td>
+                    <td>
+                      <div align="center" id="player">
+                        <p>Result</p>
+                        <audio controls>
+                          <source src="./assets/audio/guitar1_delay.wav" type="audio/wav">
+                          Your browser does not support the audio element.
+                        </audio>
+                        </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </p>
+            <h3>Random Combinations</h3>
+            <p>
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>Sample</th>
+                    <th>Impulse</th>
+                    <th>Output</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <div align="center" id="player">
+                      <p>Synth pad</p>
+                      <audio controls>
+                        <source src="./assets/audio/synth_pad.wav" type="audio/wav">
+                        Your browser does not support the audio element.
+                      </audio>
+                      </div>
+                    </td>
+                    <td>
+                      <div align="center" id="player">
+                        <p>Plucking a Slinky</p>
+                        <audio controls>
+                          <source src="./assets/audio/slinky_ir.wav" type="audio/wav">
+                          Your browser does not support the audio element.
+                        </audio>
+                        </div>
+                    </td>
+                    <td>
+                      <div align="center" id="player">
+                        <p>Result</p>
+                        <audio controls>
+                          <source src="./assets/audio/synth_slinky.wav" type="audio/wav">
+                          Your browser does not support the audio element.
+                        </audio>
+                        </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div align="center" id="player">
+                      <p>Dry Guitar Signal 1</p>
+                      <audio controls>
+                        <source src="./assets/audio/guitar1.wav" type="audio/wav">
+                        Your browser does not support the audio element.
+                      </audio>
+                      </div>
+                    </td>
+                    <td>
+                      <div align="center" id="player">
+                        <p>Synth pad</p>
+                        <audio controls>
+                          <source src="./assets/audio/synth_pad.wav" type="audio/wav">
+                          Your browser does not support the audio element.
+                        </audio>
+                        </div>
+                    </td>
+                    <td>
+                      <div align="center" id="player">
+                        <p>Result</p>
+                        <audio controls>
+                          <source src="./assets/audio/guitar1_synth.wav" type="audio/wav">
+                          Your browser does not support the audio element.
+                        </audio>
+                        </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div align="center" id="player">
+                      <p>Guitar Signal 3</p>
+                      <audio controls>
+                        <source src="./assets/audio/guitar3.wav" type="audio/wav">
+                        Your browser does not support the audio element.
+                      </audio>
+                      </div>
+                    </td>
+                    <td>
+                      <div align="center" id="player">
+                        <p>Koli National Park during winter</p>
+                        <audio controls>
+                          <source src="./assets/audio/koli_snow_site1_1way_mono.wav" type="audio/wav">
+                          Your browser does not support the audio element.
+                        </audio>
+                        </div>
+                    </td>
+                    <td>
+                      <div align="center" id="player">
+                        <p>Result</p>
+                        <audio controls>
+                          <source src="./assets/audio/guitar3_koli.wav" type="audio/wav">
+                          Your browser does not support the audio element.
+                        </audio>
+                        </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div align="center" id="player">
+                      <p>100 gecs 757</p>
+                      <a href="https://www.youtube.com/watch?v=M6MV1nxxGf8">https://www.youtube.com/watch?v=M6MV1nxxGf8  </a>
+                      </div>
+                    </td>
+                    <td>
+                      <div align="center" id="player">
+                        <p>Stairway + 800hz cutoff low pass filter</p>
+                        <audio controls>
+                          <source src="./assets/audio/stairwell_ortf.wav" type="audio/wav">
+                          Your browser does not support the audio element.
+                        </audio>
+                        <audio controls>
+                          <source src="./assets/audio/low_pass800.wav" type="audio/wav">
+                          Your browser does not support the audio element.
+                        </audio>
+                        </div>
+                    </td>
+                    <td>
+                      <div align="center" id="player">
+                        <p>Result</p>
+                        <audio controls>
+                          <source src="./assets/audio/757_rlpr.wav" type="audio/wav">
+                          Your browser does not support the audio element.
+                        </audio>
+                        <p>Sounds kind of like if you were listening from outside a highschool gym</p>
+                        </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </p>
+          </section>
+
+          <hr class="divider">
+
+          <section id="conv_sources">
+            <h2>Sources</h2>
+            <h3>Text</h3>
+            <ol>
+              <li>Straschill, Rainer. "Audio Engineering Myths: Linearity". <i>Moinsound's Blog</i> 30 Jan. 2015. <a href="https://moinsound.wordpress.com/2015/01/30/audio-engineering-myths-linearity/">https://moinsound.wordpress.com/2015/01/30/audio-engineering-myths-linearity/</a></li>
+              <li>Wikipedia contributors. "Impulse response." Wikipedia, The Free Encyclopedia. Wikipedia, The Free Encyclopedia, 23 Apr. 2023. Web. 4 May. 2023. <a href="https://en.wikipedia.org/wiki/Impulse_response#Acoustic_and_audio_applications">https://en.wikipedia.org/wiki/Impulse_response#Acoustic_and_audio_applications</a></li>
+              <li>Wikipedia contributors. "Convolution." Wikipedia, The Free Encyclopedia. Wikipedia, The Free Encyclopedia, 10 Apr. 2023. Web. 4 May. 2023. <a href="https://en.wikipedia.org/wiki/Convolution#Fast_convolution_algorithms">https://en.wikipedia.org/wiki/Convolution#Fast_convolution_algorithms</a></li>
+            </ol>
+            <h3>Audio and Impulses</h3>
+            <p>All samples not listed were made by myself.</p>
+            <ul>
+              <li>University of York stairway, Koli national park impulse responses - <a href="https://www.openair.hosted.york.ac.uk/">https://www.openair.hosted.york.ac.uk/</a></li>
+              <li>Dog bark, synth pad - <a href="https://ask.audio/articles/what-is-convolution-reverb">https://ask.audio/articles/what-is-convolution-reverb</a></li>
+              <li>Analog delay - <a href="https://bedroomproducersblog.com/2014/05/22/free-boss-gt-8-reverb-impulse-response-pack-animus-invidious/">https://bedroomproducersblog.com/2014/05/22/free-boss-gt-8-reverb-impulse-response-pack-animus-invidious/</a></li>
+              <li>100 gecs - 757 - <a href="https://www.youtube.com/watch?v=M6MV1nxxGf8">https://www.youtube.com/watch?v=M6MV1nxxGf8</a></li>
+            </ul>
+            <h3>Site Template</h3>
+            <ul>
+              <li>iDocs by Harnish Design - <a href="https://github.com/harnishdesign/iDocs">https://github.com/harnishdesign/iDocs</a></li>
+            </ul>
+          </section>
+
+  </div>
+  <!-- Document Wrapper end -->
+
+  <!-- Back To Top -->
+  <a id="back-to-top" data-toggle="tooltip" title="Back to Top" href="javascript:void(0)"><i
+      class="fa fa-chevron-up"></i></a>
+
+  <!-- JavaScript
+============================ -->
+  <script src="assets/vendor/jquery/jquery.min.js"></script>
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <!-- Highlight JS -->
+  <script src="assets/vendor/highlight.js/highlight.min.js"></script>
+  <!-- Easing -->
+  <script src="assets/vendor/jquery.easing/jquery.easing.min.js"></script>
+  <!-- Magnific Popup -->
+  <script src="assets/vendor/magnific-popup/jquery.magnific-popup.min.js"></script>
+  <!-- Custom Script -->
+  <script src="assets/js/theme.js"></script>
+</body>
+
 </html>
